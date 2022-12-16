@@ -13,6 +13,12 @@ contract Vault {
         _;
     }
 
+    uint public duration;
+    uint public finishAt;
+    uint public updatedAt;
+    uint public rewardRate;
+    uint public rewardPerTokenStored;
+
     constructor(address _devUSDC) {
         owner = msg.sender;
         DevUSDC = IERC20(_devUSDC);
