@@ -8,7 +8,7 @@ contract DevUSDC is ERC20{
     mapping(address => uint) public staked;
     mapping(address => uint) private stakedFromTS;
 
-      constructor(uint256 initialSupply) ERC20("Gold", "GLD") {
+      constructor(uint256 initialSupply) ERC20("DevUSDC", "DUSDC") {
         _mint(msg.sender, initialSupply);
     }
 
