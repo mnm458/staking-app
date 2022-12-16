@@ -19,6 +19,14 @@ contract Vault {
     uint public rewardRate;
     uint public rewardPerTokenStored;
 
+    mapping(address => uint) public userRewardPaid;
+
+    mapping(address => uint) public rewards;
+
+    uint public totalSupply;
+
+    mapping(address => uint) public balanceOf;
+
     constructor(address _devUSDC) {
         owner = msg.sender;
         DevUSDC = IERC20(_devUSDC);
