@@ -4,16 +4,10 @@ import * as vaultJson from "../artifacts/contracts/Vault.sol/Vault.json";
 import * as devUSDCJson from "../artifacts/contracts/DevUSDC.sol/DevUSDC.json";
 
 const EXPOSED_KEY = "loremipsum";
+const DUSDC_ADDR = "0xdC99c0d40A1B45308E77797975b5ccfF3b7e8fB8";
 const CETH_ADDR = "0x64078a6189Bf45f80091c6Ff2fCEe1B15Ac8dbde";
 const COMPTROLLER_ADDR = "0x05Df6C772A563FfB37fD3E04C1A279Fb30228621";
 
-function convertStringArrayToBytes32(array: string[]) {
-  const bytes32Array = [];
-  for (let index = 0; index < array.length; index++) {
-    bytes32Array.push(ethers.utils.formatBytes32String(array[index]));
-  }
-  return bytes32Array;
-}
 
 async function main() {
   const wallet =
@@ -29,18 +23,18 @@ async function main() {
   if (balance < 0.01) {
     throw new Error("Not enough ether");
   }
-  console.log("Deploying DevUSDC");
+  // console.log("Deploying DevUSDC");
 
-  const devUSDCFactory = new ethers.ContractFactory(
-    vaultJson.abi,
-    vaultJson.bytecode,
-    signer
-  );
-  const devUSDContract = await devUSDCFactory.deploy();
-  console.log("Awaiting confirmations");
-  await devUSDCFactory.deployed();
-  console.log("Completed");
-  console.log(`Contract deployed at ${devUSDContract.address}`);
+  // const devUSDCFactory = new ethers.ContractFactory(
+  //   devUSDCJson.abi,
+  //   devUSDCJson.bytecode,
+  //   signer
+  // );
+  // const devUSDContract = await devUSDCFactory.deploy();
+  // console.log("Awaiting confirmations");
+  // await devUSDContract.deployed();
+  // console.log("Completed");
+  // console.log(`Contract deployed at ${devUSDContract.address}`);
 
   console.log("Deploying Vault contract");
   const vaultFactory = new ethers.ContractFactory(
@@ -49,9 +43,7 @@ async function main() {
     signer
   );
   const vaultContract = await vaultFactory.deploy(
-    devUSDContract.address,
-    ethers.utils.getAddress(CETH_ADDR),
-    ethers.utils.getAddress(COMPTROLLER_ADDR)
+   ethers.utils.getAddress(DUSDC_ADDR),
   );
   console.log("Awaiting confirmations");
   await vaultContract.deployed();
