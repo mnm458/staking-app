@@ -13,11 +13,11 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IComptroller.sol";
 import "./interfaces/ICEth.sol";
-import "./chainlink/EthPrice.sol";
+//import "./chainlink/EthPrice.sol";
 
 contract Vault {
     IERC20 public immutable DevUSDC;
-    EthPrice public ethPrice;
+    //EthPrice public ethPrice;
 
     address public owner;
 
@@ -109,7 +109,7 @@ contract Vault {
         balanceOf[msg.sender] += _amount;
         totalSupply += _amount;
         //FIX
-        uint currentEthPrice = uint(ethPrice.getPrice());
+        //uint currentEthPrice = uint(ethPrice.getPrice());
         _supplyEthToCompound();
     }
 

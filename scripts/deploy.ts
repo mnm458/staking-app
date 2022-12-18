@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import "dotenv/config";
 import * as vaultJson from "../artifacts/contracts/Vault.sol/Vault.json";
+import * as devUSDCJson from "../artifacts/contracts/DevUSDC.sol/DevUSDC.json";
 
 const EXPOSED_KEY = "loremipsum";
 const CETH_ADDR = "0x64078a6189Bf45f80091c6Ff2fCEe1B15Ac8dbde";
@@ -28,18 +29,29 @@ async function main() {
   if (balance < 0.01) {
     throw new Error("Not enough ether");
   }
+  console.log("Deploying DevUSDC");
+
+  const devUSDCFactory = new ethers.ContractFactory(
+    vaultJson.abi,
+    vaultJson.bytecode,
+    signer
+  );
+  const devUSDContract = await devUSDCFactory.deploy();
+  console.log("Awaiting confirmations");
+  await devUSDCFactory.deployed();
+  console.log("Completed");
+  console.log(`Contract deployed at ${devUSDContract.address}`);
+
   console.log("Deploying Vault contract");
-  
   const vaultFactory = new ethers.ContractFactory(
     vaultJson.abi,
     vaultJson.bytecode,
     signer
   );
   const vaultContract = await vaultFactory.deploy(
-    convertStringArrayToBytes32(proposals),
+    devUSDContract.address,
     ethers.utils.getAddress(CETH_ADDR),
     ethers.utils.getAddress(COMPTROLLER_ADDR)
-
   );
   console.log("Awaiting confirmations");
   await vaultContract.deployed();
