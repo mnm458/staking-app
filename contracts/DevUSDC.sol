@@ -2,15 +2,14 @@
 //Author: Mohak Malhotra
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
-contract DevUSDC is ERC20, AccessControl, ERC20Permit{
+contract DevUSDC is ERC20, AccessControl{
       bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
       constructor() 
-      ERC20("DevUSDC", "DUSDC") ERC20Permit("DevUSDC") {
+      ERC20("DevUSDC", "DUSDC") {
          _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
       }

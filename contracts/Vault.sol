@@ -12,7 +12,7 @@ contract Vault {
 
 
     //Seconds in a year
-    uint32 public immutable secYear = 31536000;
+    uint32 public immutable secYear = 31449600;
 
     uint public immutable ethPrice = 1234*1e18;
 
@@ -42,10 +42,8 @@ contract Vault {
     modifier updateReward(address _account, uint _amount, bool unstaked) {
         StakeObj memory userStake = userStakes[_account];
         uint previousStake = userStake.stakedAmount;
-        require(previousStake > 0, "Stake can't be zero");
         uint timeDiff = block.timestamp - userStake.lastUpdatedTimeStamp;
         uint timeRatio = (timeDiff*1e18) / (secYear);
-
         if(unstaked == false){
             if(previousStake != 0){
                 
