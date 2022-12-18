@@ -109,8 +109,7 @@ contract Vault {
         balanceOf[msg.sender] += _amount;
         totalSupply += _amount;
         //FIX
-        int currentEthPrice = ethPrice.getPrice();
-        address payable cEthAddr = payable(address(cEth));
+        uint currentEthPrice = uint(ethPrice.getPrice());
         _supplyEthToCompound();
     }
 
