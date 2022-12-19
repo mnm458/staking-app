@@ -44,6 +44,7 @@ async function main() {
   );
   const vaultContract = await vaultFactory.deploy(
    ethers.utils.getAddress(DUSDC_ADDR),
+   ethers.utils.getAddress(CETH_ADDR)
   );
   console.log("Awaiting confirmations");
   await vaultContract.deployed();
