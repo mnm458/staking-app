@@ -112,8 +112,8 @@ contract Vault is ReentrancyGuard {
         
     }
 
-    function LastUpdatedAt() external view returns(uint) {
-        return userStakes[msg.sender].lastUpdatedTimeStamp;
+    function LastUpdatedAt(address _account) external view returns(uint) {
+        return userStakes[_account].lastUpdatedTimeStamp;
     }
 
     /**

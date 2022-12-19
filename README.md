@@ -80,12 +80,12 @@ All the contracts have been deployed on Goerli Network and are verified.
 
 * DevUSDC Contract Address
   ```sh
-  0x81F1D8930adf53dd52c2Ca95Cd89783Ed369eBD7
+  0xa5Fb9606C90939C7Bb65dd7C36Bbc1Ea08F1b756
   ```
   
 * Vault Contract Address
   ```sh
-  0x81F1D8930adf53dd52c2Ca95Cd89783Ed369eBD7
+  0x4D21b1E86dEc5aa7F63eE62c54813aD29d2c2A8e
   ```
   
 * CEth Contract Address

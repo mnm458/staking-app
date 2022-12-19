@@ -10,7 +10,7 @@ function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
 const SECONDS_IN_A_YEAR = 31449600;
-const STAKE_AMOUNT = "0.1";
+const STAKE_AMOUNT = "5";
 const REWARD_RATE = 10;
 describe("Staking Vault Testing", function () {
     let tokenContract: DevUSDC;
@@ -45,7 +45,7 @@ describe("Staking Vault Testing", function () {
             await stakeTx.wait(1);
         })
         it(" should not allow less than 5 ether to be staked", async () =>{
-            await expect( vaultContract.stake({value: ethers.utils.parseEther("0.05")})).to.be.revertedWith("Please stake 5 or more eth");
+            await expect( vaultContract.stake({value: ethers.utils.parseEther("4.0")})).to.be.revertedWith("Please stake 5 or more eth");
         })
 
         it("should increase the user's staked amount", async () =>{
