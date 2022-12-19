@@ -4,7 +4,7 @@ import * as vaultJson from "../artifacts/contracts/Vault.sol/Vault.json";
 import * as devUSDCJson from "../artifacts/contracts/DevUSDC.sol/DevUSDC.json";
 
 const EXPOSED_KEY = "loremipsum";
-const DUSDC_ADDR = "0xdC99c0d40A1B45308E77797975b5ccfF3b7e8fB8";
+const DUSDC_ADDR = "0x81F1D8930adf53dd52c2Ca95Cd89783Ed369eBD7";
 const CETH_ADDR = "0x64078a6189Bf45f80091c6Ff2fCEe1B15Ac8dbde";
 const COMPTROLLER_ADDR = "0x05Df6C772A563FfB37fD3E04C1A279Fb30228621";
 

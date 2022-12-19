@@ -54,6 +54,7 @@ contract Vault {
             userStakes[_account].stakedAmount += _amount;
         } else{
             uint reward = ((timeRatio / 10) *  ethPrice * (previousStake/1e18))/1e18;
+            userStakes[_account].pendingRewards += reward;
             userStakes[_account].stakedAmount -= _amount;
         }
          userStakes[_account].lastUpdatedTimeStamp = block.timestamp;
@@ -81,7 +82,9 @@ contract Vault {
 
     function redeemRewards() external{
         require(userStakes[msg.sender].pendingRewards > 0, "You don't have any rewards to redeem");
+        require(userStakes[msg.sender].stakedAmount == 0, "You can't redeem rewards before unstaking all your stake");
         DevUSDC.transfer(msg.sender, userStakes[msg.sender].pendingRewards);
+        userStakes[msg.sender].pendingRewards = 0;
     }
 
     function redeemableRewards(address _account)  external view returns(uint){
