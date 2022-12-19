@@ -104,7 +104,7 @@ contract Vault {
      * @dev Modifier updateReward allows multiple stakes at different points in time. Minimum 5 eth needs to be staked at a time
      */
     function stake() external payable updateReward(msg.sender) {
-        require(msg.value >= 5*1e18, "Please stake 5 or more eth");
+        require(msg.value >= 0.1*1e18, "Please stake 5 or more eth");
         totalSupply += msg.value;
         userStakes[msg.sender].stakedAmount += msg.value;
         supplyEthToCompound(msg.value, msg.sender);

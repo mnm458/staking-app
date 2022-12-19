@@ -1,43 +1,31 @@
 import { expect } from "chai";
 // eslint-disable-next-line node/no-unpublished-import
-import { BytesLike } from "ethers";
+import { BigNumber, BytesLike } from "ethers";
 import { ethers } from "hardhat";
 // eslint-disable-next-line node/no-missing-import
 import { DevUSDC } from "../typechain-types";
 
-const PREMINT = ethers.utils.parseUnits("0");
 const TEST_MINT_VALUE = ethers.utils.parseUnits("1000");
 
-describe("Testing ERC20 Token", () => {
+describe("Testing DevUSDC ERC20 Token", () => {
   let tokenContract: DevUSDC;
-  let accounts: any[];
+  let account1: any;
+  let account2: any;
   let minterRoleHash: BytesLike;
 
   beforeEach(async () => {
-    accounts = await ethers.getSigners();
-    const tokenFactory = await ethers.getContractFactory(
-      "DevUSDC"
-    );
-    tokenContract = await tokenFactory.deploy();
-    await tokenContract.deployed();
+    [account1, account2] = await ethers.getSigners();
+    const devUsdc = await ethers.getContractFactory("DevUSDC");
+    tokenContract = await devUsdc.attach("0xDf938404790D6ec48d79900D2d225fed0728B57F");
     minterRoleHash = await tokenContract.MINTER_ROLE();
   });
 
   describe("when the contract is deployed", async () => {
-    it("has zero total supply", async () => {
-      const totalSupplyBN = await tokenContract.totalSupply();
-      const expectedValueBN = PREMINT;
-      const diffBN = totalSupplyBN.gt(expectedValueBN)
-        ? totalSupplyBN.sub(expectedValueBN)
-        : expectedValueBN.sub(totalSupplyBN);
-      const diff = Number(diffBN);
-      expect(diff).to.eq(0);
-    });
 
     it("sets the deployer as minter", async () => {
       const hasRole = await tokenContract.hasRole(
         minterRoleHash,
-        accounts[0].address
+        account1.address
       );
       expect(hasRole).to.eq(true);
     });
@@ -45,29 +33,18 @@ describe("Testing ERC20 Token", () => {
     describe("when the minter call the mint function", async () => {
       beforeEach(async () => {
         const mintTx = await tokenContract.mint(
-          accounts[1].address,
+          account1.address,
           TEST_MINT_VALUE
         );
         await mintTx.wait();
       });
 
       it("updates the total supply", async () => {
-        const totalSupplyBN = await tokenContract.totalSupply();
-        const expectedValueBN = TEST_MINT_VALUE;
-        const diffBN = totalSupplyBN.gt(expectedValueBN)
-          ? totalSupplyBN.sub(expectedValueBN)
-          : expectedValueBN.sub(totalSupplyBN);
-        const diff = Number(diffBN);
-        expect(diff).to.eq(0);
-      });
-
-      it("has given balance to the account", async () => {
-        const balanceOfBN = await tokenContract.balanceOf(accounts[1].address);
-        const expectedValueBN = TEST_MINT_VALUE;
-        const diffBN = balanceOfBN.gt(expectedValueBN)
-          ? balanceOfBN.sub(expectedValueBN)
-          : expectedValueBN.sub(balanceOfBN);
-        const diff = Number(diffBN);
+        let totalSupply = await tokenContract.totalSupply();
+        let denom =  BigNumber.from(10).pow(18);
+        let NumtotalSupply = totalSupply.div(denom).toNumber();
+        const expectedValue = Number(TEST_MINT_VALUE);
+        const diff = NumtotalSupply - expectedValue;
         expect(diff).to.eq(0);
       });
     });

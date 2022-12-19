@@ -11,6 +11,11 @@
     "@openzeppelin/contracts" "^4.3.3"
     "@openzeppelin/contracts-v0.7" "npm:@openzeppelin/contracts@v3.4.2"
 
+"@compound-finance/compound-js@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@compound-finance/compound-js/-/compound-js-0.5.1.tgz#b1f445811445df26d9e7f9d9d2ef81950c36a5ec"
+  integrity sha512-aCJk8e5ApDgAUAYjtlSTLA2Z+/fdzHc0ho/ZmpwsBPjuMLoNVWN5okh5vIgEALDWtTAHRd3PvrDtDms8+bH4CA==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
