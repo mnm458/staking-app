@@ -7,6 +7,12 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {CEth} from "./interfaces/ICEth.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
  
+/**
+ * @title Staking Vault for Compound
+ * @notice A custom vault which allows users to stake eth which is then used as collateral on compound.
+ * @notice Users can stake multiple times but they can only redeem rewards after unstaking. Reward rate is in DevUSDC @ a constant 10%p.a.
+ * @author Mohak Malhotra
+ */
 contract Vault {
     IERC20 public immutable DevUSDC;
 
