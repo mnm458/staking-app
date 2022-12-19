@@ -4,8 +4,10 @@ import { BigNumber, BytesLike } from "ethers";
 import { ethers } from "hardhat";
 // eslint-disable-next-line node/no-missing-import
 import { DevUSDC } from "../typechain-types";
+import * as dotenv from "dotenv";
 
 const TEST_MINT_VALUE = ethers.utils.parseUnits("1000");
+const DUSDC_ADDR = process.env.DUSD_ADDR;
 
 describe("Testing DevUSDC ERC20 Token", () => {
   let tokenContract: DevUSDC;
@@ -16,7 +18,7 @@ describe("Testing DevUSDC ERC20 Token", () => {
   beforeEach(async () => {
     [account1, account2] = await ethers.getSigners();
     const devUsdc = await ethers.getContractFactory("DevUSDC");
-    tokenContract = await devUsdc.attach("0xDf938404790D6ec48d79900D2d225fed0728B57F");
+    tokenContract = devUsdc.attach(DUSDC_ADDR !== undefined ? DUSDC_ADDR : "");
     minterRoleHash = await tokenContract.MINTER_ROLE();
   });
 

@@ -2,9 +2,10 @@ import { ethers } from "ethers";
 import "dotenv/config";
 import * as vaultJson from "../artifacts/contracts/Vault.sol/Vault.json";
 import * as devUSDCJson from "../artifacts/contracts/DevUSDC.sol/DevUSDC.json";
+import * as dotenv from "dotenv";
 
 const EXPOSED_KEY = "";
-const CETH_ADDR = "0x64078a6189Bf45f80091c6Ff2fCEe1B15Ac8dbde";
+const CETH_ADDR = process.env.CETH_ADDR;
 
 
 async function main() {
