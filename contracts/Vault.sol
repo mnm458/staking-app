@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {CEth} from "./interfaces/ICEth.sol";
 import {IERC20} from "./interfaces/IERC20.sol";
  
@@ -13,13 +14,13 @@ import {IERC20} from "./interfaces/IERC20.sol";
  * @notice Users can stake multiple times but they can only redeem rewards after unstaking. Reward rate is in DevUSDC @ a constant 10%p.a.
  * @author Mohak Malhotra
  */
-contract Vault {
+contract Vault is ReentrancyGuard {
 
     // VARIABLES & CONSTANTS
     IERC20 public immutable devUSDC;
     address payable public immutable cEthAddr;
     uint32 public immutable secYear = 31449600;
-    uint8 public immutable rewardrate = 10;
+    uint8 public immutable rewardRate = 10;
     AggregatorV3Interface internal priceFeed;
     address public owner;
     uint public vaultReserves;
@@ -36,7 +37,7 @@ contract Vault {
 
     //EVENTS
     event Received(address, uint);
-    event MyLog(string, uint256);
+    event LogService(string, uint256);
 
 
      /**
@@ -72,8 +73,8 @@ contract Vault {
         if(previousStake != 0){ 
         uint timeDiff = block.timestamp - userStake.lastUpdatedTimeStamp;
         uint timeRatio = (timeDiff*1e18) / (secYear);
-        uint currEthPrice = uint(getPrice());
-        uint reward = ((timeRatio / rewardrate) *  currEthPrice * (previousStake/1e18))/1e18;
+        uint currEthPrice = getPrice();
+        uint reward = ((timeRatio / rewardRate) *  currEthPrice * (previousStake/1e18))/1e18;
         userStakes[_account].pendingRewards += reward;
             } 
         userStakes[_account].lastUpdatedTimeStamp = block.timestamp;
@@ -85,10 +86,10 @@ contract Vault {
      * @dev Chainlink V3 Aggregator interface is being used. The result is in 
      * @return price which is the current price of ehtereum in USD * 10^8
      */
-    function getPrice() public view returns (int){
+    function getPrice() public view returns (uint){
         ( , int price, , ,) = priceFeed.latestRoundData();
         require(price > 0, "Incorrect price");
-        return price;
+        return uint(price);
     }
 
         /**
@@ -104,18 +105,22 @@ contract Vault {
      * @dev Modifier updateReward allows multiple stakes at different points in time. Minimum 5 eth needs to be staked at a time
      */
     function stake() external payable updateReward(msg.sender) {
-        require(msg.value >= 0.1*1e18, "Please stake 5 or more eth");
+        require(msg.value >= 5*1e18, "Please stake 5 or more eth");
         totalSupply += msg.value;
         userStakes[msg.sender].stakedAmount += msg.value;
         supplyEthToCompound(msg.value, msg.sender);
         
     }
 
+    function LastUpdatedAt() external view returns(uint) {
+        return userStakes[msg.sender].lastUpdatedTimeStamp;
+    }
+
     /**
      * @notice The user executes this function to unstake their funds at any point, there is no lock up time.
      * @dev Collateral on Compound in CETH is also redeemed back to ether and sent to the user. THe yield from compound stays in the contract
      */
-    function unstake() external updateReward(msg.sender) {
+    function unstake() external updateReward(msg.sender) nonReentrant{
         uint stakedAmount = userStakes[msg.sender].stakedAmount;
         require(stakedAmount > 0, "You haven't staked any ether");
         uint returnedAmount = redeemCEth(userStakes[msg.sender].cEthBalance);
@@ -132,7 +137,7 @@ contract Vault {
     /**
      * @notice Once the user has unstaked their funds, they can then withdraw their DevUSDC rewards
      */
-    function redeemRewards() external{
+    function redeemRewards() external nonReentrant{
         require(userStakes[msg.sender].pendingRewards > 0, "You don't have any rewards to redeem");
         require(userStakes[msg.sender].cEthBalance == 0, "You can't redeem rewards before unstaking all your stake");
         devUSDC.transfer(msg.sender, userStakes[msg.sender].pendingRewards);
@@ -174,7 +179,7 @@ contract Vault {
      */
      function redeemCEth(
         uint256 _amount
-    ) public returns ( uint) {
+    ) internal returns ( uint) {
         // Create a reference to the corresponding cToken contract
         CEth cToken = CEth(cEthAddr);
 
@@ -187,7 +192,7 @@ contract Vault {
         redeemResult = cToken.redeem(_amount);
         // Error codes are listed here:
         // https://compound.finance/docs/ctokens#error-codes
-        emit MyLog("If this is not 0, there was an error", redeemResult);
+        emit LogService("If this is not 0, there was an error", redeemResult);
 
         return returnedAmount;
     }
