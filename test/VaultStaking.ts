@@ -114,6 +114,17 @@ describe("Staking Vault Testing", function () {
         })
 
     })
+
+    describe("When Chainlink oracle is called", function () {
+        let ethPrice: any;
+        before(async function(){
+            ethPrice = await vaultContract.getPrice();
+            await ethPrice.wait(1);
+            console.log(`latest price of ETH/USD: ${ethPrice * 10**-8} USD`);
+        })
+
+    })
+
 });
    
 
